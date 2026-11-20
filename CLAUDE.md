@@ -16,12 +16,13 @@ This file holds stable project rules. Task-specific scope lives in `docs/briefs/
 - Local orchestration: Aspire (AppHost + ServiceDefaults).
 - LLM access: `Microsoft.Extensions.AI` abstractions (`IChatClient`) only. No provider SDK types
   outside the infrastructure layer. Local provider: Ollama.
-- Frontend: Angular (latest stable), standalone components, signals, strict TypeScript.
+- Frontend: ASP.NET Core Razor Pages with htmx (server-rendered, no Node toolchain).
+  htmx is vendored as a pinned file in the repo, not loaded from a CDN.
 - Tests: xUnit, Testcontainers for PostgreSQL integration tests.
 
 ## Architecture rules
 
-- Layers: `Domain` (no dependencies) → `Application` → `Infrastructure` → hosts (`Api`, workers).
+- Layers: `Domain` (no dependencies) → `Application` → `Infrastructure` → hosts (`Api`, `Web`, workers).
 - Every external dependency (job source, LLM, clock) sits behind an interface so it can be faked in tests.
 - Background work is idempotent: re-running any step must not create duplicates or corrupt data.
 - Never invent data. If a field is not stated in a posting, store `null`, not a guess.
@@ -41,8 +42,7 @@ This file holds stable project rules. Task-specific scope lives in `docs/briefs/
 ## Commands
 
 - Run everything: `dotnet run --project src/JobRadar.AppHost`
-- Backend tests: `dotnet test`
-- Frontend: `cd web && npm ci && npm start`
+- Tests: `dotnet test`
 
 ## Data source etiquette
 

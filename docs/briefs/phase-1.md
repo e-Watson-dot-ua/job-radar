@@ -5,7 +5,7 @@ Place this file at `docs/briefs/phase-1.md`. Read `CLAUDE.md` first; its rules a
 ## Goal
 
 A working end-to-end slice: postings are fetched on a schedule from one public source,
-an LLM extracts structured fields from each posting, and an Angular page lists postings with filters.
+an LLM extracts structured fields from each posting, and a web page lists postings with filters.
 
 The slice must be useful on its own and designed so that later phases (messaging, matching,
 RAG, evals, Kubernetes) can be added without rewriting it.
@@ -26,9 +26,9 @@ job-radar/
     JobRadar.Application/      use cases, interfaces (IJobSource, IPostingExtractor, IClock)
     JobRadar.Infrastructure/   EF Core, source clients, LLM extractor, HTML-to-text
     JobRadar.Api/              minimal API
+    JobRadar.Web/              Razor Pages + htmx UI
     JobRadar.Ingestion/        worker: fetch and upsert postings
     JobRadar.Extraction/       worker: extract structured fields
-  web/                         Angular app
   tests/
     JobRadar.UnitTests/
     JobRadar.IntegrationTests/ Testcontainers PostgreSQL
@@ -44,11 +44,11 @@ job-radar/
 ## 2. Aspire AppHost
 
 - PostgreSQL container with a persistent volume and a `jobradar` database.
-- `Api`, `Ingestion`, `Extraction` projects referencing the database.
+- `Api`, `Web`, `Ingestion`, `Extraction` projects referencing the database.
 - Ollama: by default the workers call an Ollama instance already running on the host
   (configured endpoint), because host GPU access is simpler. Make it switchable via configuration
   to an Ollama container managed by Aspire. Record the choice in `docs/decisions/0001-ollama-hosting.md`.
-- Angular app registered so that `dotnet run --project src/JobRadar.AppHost` starts everything.
+- `Web` project registered so that `dotnet run --project src/JobRadar.AppHost` starts everything.
 
 ## 3. Data model (PostgreSQL via EF Core migrations)
 
@@ -78,13 +78,13 @@ job-radar/
 - `raw_model_output` (jsonb)
 - Primary key (`posting_id`, `prompt_version`).
 
-Normalise skill names to a canonical form (for example `C#`, `.NET`, `Kubernetes`) through
+Normalize skill names to a canonical form (for example `C#`, `.NET`, `Kubernetes`) through
 a small mapping table or dictionary in `Application`, unit-tested.
 
 ## 4. Ingestion worker
 
 - First source: **Arbeitnow public job board API** (`https://www.arbeitnow.com/api/job-board-api`, paginated
-  with `?page=`, no key). Before implementing, read its current documentation and terms and summarise them in
+  with `?page=`, no key). Before implementing, read its current documentation and terms and summarize them in
   `docs/decisions/0002-first-source.md`. Its terms ask for a link back; the UI must show it.
 - Implement behind `IJobSource` so more sources can be added later.
 - Runs on a configurable interval (default every 6 hours) using `PeriodicTimer`; also runnable once on startup.
@@ -126,14 +126,16 @@ a small mapping table or dictionary in `Application`, unit-tested.
 - `GET /api/stats/pipeline`: counts by `extraction_status`.
 - Health checks from ServiceDefaults. ProblemDetails for errors.
 
-## 7. Angular app
+## 7. Web UI (Razor Pages + htmx)
 
 - Postings list: table or cards with title, company, location, remote policy, seniority, salary range, top skills.
-- Filter panel bound to the API query parameters; filters reflected in the URL.
+- Filter panel with the same parameters as `GET /api/postings`; filters reflected in the URL.
 - Detail view: extracted fields, the cleaned description, a link to the original posting,
   and "Source: Arbeitnow" with a link.
 - Small pipeline status widget (pending / succeeded / failed counts).
-- Typed API client in a dedicated service; no `any`.
+- Pages call Application use cases directly (no HTTP hop to the API). htmx handles partial updates:
+  filtering results without a full page reload, and refreshing the pipeline widget periodically.
+- htmx is vendored as a pinned file under `wwwroot/lib/`; no Node toolchain.
 
 ## 8. Tests
 
@@ -146,7 +148,7 @@ a small mapping table or dictionary in `Application`, unit-tested.
 ## 9. Documentation
 
 - `README.md`: what the project is, architecture diagram (Mermaid), prerequisites (Docker, .NET SDK,
-  Node, Ollama), how to run, how to configure the model, source attribution.
+  Ollama), how to run, how to configure the model, source attribution.
 - ADRs in `docs/decisions/` for: Ollama hosting, first source, row-claiming strategy, skill normalisation.
 
 ## Definition of done
@@ -154,7 +156,7 @@ a small mapping table or dictionary in `Application`, unit-tested.
 1. A fresh clone plus the README steps starts the whole system with one command.
 2. After one ingestion run, postings appear in the database without duplicates on a second run.
 3. The extraction worker processes pending postings; failures are retried with backoff and capped.
-4. The Angular page lists postings, filters work, detail view shows extracted fields and attribution.
+4. The web UI lists postings, filters work, detail view shows extracted fields and attribution.
 5. `/api/stats/skills` returns plausible top skills.
 6. All tests pass; no real network calls in tests.
 7. No personal data in the repository.
@@ -166,7 +168,7 @@ a small mapping table or dictionary in `Application`, unit-tested.
 3. Source client + ingestion worker + upsert tests.
 4. Extraction worker with a fake extractor first, then the real Ollama extractor.
 5. API endpoints + integration tests.
-6. Angular app.
+6. Web UI (Razor Pages + htmx).
 7. README, ADRs, cleanup.
 
 Commit after each step.
