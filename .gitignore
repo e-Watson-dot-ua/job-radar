@@ -1,0 +1,31 @@
+# .NET build output
+bin/
+obj/
+*.user
+*.suo
+TestResults/
+*.trx
+.vs/
+
+# IDEs
+.idea/
+.vscode/
+
+# Node / Angular (web/)
+node_modules/
+web/dist/
+web/.angular/
+
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Personal data — never commit (CLAUDE.md rule)
+data/private/
+
+# Local environment overrides and secrets
+.env
+*.local.json
+
+# OS files
+Thumbs.db
+.DS_Store
