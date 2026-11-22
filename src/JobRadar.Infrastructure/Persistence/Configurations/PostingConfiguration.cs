@@ -16,7 +16,8 @@ internal sealed class PostingConfiguration : IEntityTypeConfiguration<Posting>
         builder.ToTable("postings");
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Id).ValueGeneratedNever();
-        builder.HasOne<Source>().WithMany().HasForeignKey(p => p.SourceId);
+        // Sources are reference data: refuse to delete one that still has postings.
+        builder.HasOne<Source>().WithMany().HasForeignKey(p => p.SourceId).OnDelete(DeleteBehavior.Restrict);
         builder.HasIndex(p => new { p.SourceId, p.ExternalId }).IsUnique();
 
         builder.ComplexProperty(p => p.Content, content =>
