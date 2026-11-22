@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JobRadar.Infrastructure\JobRadar.Infrastructure.csproj" />
+    <ProjectReference Include="..\JobRadar.ServiceDefaults\JobRadar.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>
