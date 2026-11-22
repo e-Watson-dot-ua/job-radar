@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\JobRadar.Application\JobRadar.Application.csproj" />
+  </ItemGroup>
+
+</Project>

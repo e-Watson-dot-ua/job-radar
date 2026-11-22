@@ -2,6 +2,12 @@
   <Folder Name="/src/">
     <Project Path="src/JobRadar.Api/JobRadar.Api.csproj" />
     <Project Path="src/JobRadar.AppHost/JobRadar.AppHost.csproj" />
+    <Project Path="src/JobRadar.Application/JobRadar.Application.csproj" />
+    <Project Path="src/JobRadar.Domain/JobRadar.Domain.csproj" />
+    <Project Path="src/JobRadar.Infrastructure/JobRadar.Infrastructure.csproj" />
     <Project Path="src/JobRadar.ServiceDefaults/JobRadar.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/JobRadar.UnitTests/JobRadar.UnitTests.csproj" />
   </Folder>
 </Solution>
