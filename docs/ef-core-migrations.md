@@ -48,3 +48,9 @@ dotnet ef migrations remove --project src/JobRadar.Infrastructure
 
 Only for a migration that has not been committed or applied. Once a migration is shared, fix mistakes
 with a new migration instead.
+
+`migrations remove` first connects to the database to check whether the migration was applied. The
+design-time connection points at our own `jobradar-postgres` container (port 17300) without a password,
+so this check fails. For a migration that was never applied or committed, delete its two files
+(`<timestamp>_<Name>.cs` and `<timestamp>_<Name>.Designer.cs`) instead, then regenerate the model snapshot
+by adding the next migration, or restore `JobRadarDbContextModelSnapshot.cs` from git.
