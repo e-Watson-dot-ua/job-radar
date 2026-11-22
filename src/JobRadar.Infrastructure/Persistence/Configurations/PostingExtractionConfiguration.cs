@@ -8,7 +8,7 @@ namespace JobRadar.Infrastructure.Persistence.Configurations;
 /// <summary>
 /// Table <c>posting_extractions</c>, keyed by (posting_id, prompt_version). <c>Fields</c> with its nested
 /// <c>Skills</c> and <c>Salary</c> are columns of this table, named exactly as in brief §3;
-/// spoken languages are one jsonb column.
+/// spoken languages are one jsonb column, written through <see cref="SpokenLanguagesConverter"/>.
 /// </summary>
 internal sealed class PostingExtractionConfiguration : IEntityTypeConfiguration<PostingExtraction>
 {
@@ -44,7 +44,10 @@ internal sealed class PostingExtractionConfiguration : IEntityTypeConfiguration<
                 salary.Property(s => s.Period).HasColumnName("salary_period");
             });
 
-            fields.ComplexCollection(f => f.SpokenLanguages, languages => languages.ToJson("required_spoken_languages"));
+            fields.Property(f => f.SpokenLanguages)
+                .HasColumnName("required_spoken_languages")
+                .HasColumnType("jsonb")
+                .HasConversion(new SpokenLanguagesConverter(), new SpokenLanguagesComparer());
         });
     }
 }
