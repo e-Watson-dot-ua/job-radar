@@ -2,19 +2,20 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
-namespace Microsoft.Extensions.Hosting;
+namespace JobRadar.ServiceDefaults;
 
 /// <summary>
 /// Common Aspire service setup: OpenTelemetry, health checks, service discovery, and HTTP resilience.
-/// Every service project references this project and calls <c>AddServiceDefaults()</c>.
-/// See https://aka.ms/aspire/service-defaults
+/// Every service project references this project and calls <c>AddServiceDefaults()</c>
+/// (with <c>using JobRadar.ServiceDefaults;</c>). See https://aka.ms/aspire/service-defaults
 /// </summary>
-public static class Extensions
+public static class ServiceDefaultsExtensions
 {
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";

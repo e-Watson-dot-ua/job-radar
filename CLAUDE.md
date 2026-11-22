@@ -23,6 +23,7 @@ This file holds stable project rules. Task-specific scope lives in `docs/briefs/
 ## Architecture rules
 
 - Layers: `Domain` (no dependencies) → `Application` → `Infrastructure` → hosts (`Api`, `Web`, workers).
+- Namespaces follow the project name and folder path (`JobRadar.<Project>.<Folder>`), with no exceptions.
 - Every external dependency (job source, LLM, clock) sits behind an interface so it can be faked in tests.
 - Background work is idempotent: re-running any step must not create duplicates or corrupt data.
 - Never invent data. If a field is not stated in a posting, store `null`, not a guess.

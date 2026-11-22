@@ -1,3 +1,5 @@
+using JobRadar.ServiceDefaults;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
