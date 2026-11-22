@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="17.0.0" />
     <PackageVersion Include="Aspire.Hosting.Dotnet" Version="17.0.0" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="17.0.0" />
   </ItemGroup>
   <ItemGroup Label="ServiceDefaults">
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.10.0" />
