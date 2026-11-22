@@ -9,7 +9,7 @@ namespace JobRadar.Domain.Extractions;
 public sealed record ExtractedFields(
     Seniority? Seniority,
     Skills Skills,
-    Salary? Salary,
+    Salary Salary,
     RemotePolicy? RemotePolicy,
     string? Country,
     string? City,
@@ -17,7 +17,7 @@ public sealed record ExtractedFields(
     bool? VisaSponsorship,
     bool? CitizenshipOrClearanceRequired)
 {
-    private ExtractedFields() : this(null, Skills.None, null, null, null, null, [], null, null) { } // for EF Core
+    private ExtractedFields() : this(null, Skills.None, Salary.None, null, null, null, [], null, null) { } // for EF Core
 
     /// <summary>
     /// Problems found; empty when valid. LLM output breaking these rules is expected now and then,
@@ -27,7 +27,7 @@ public sealed record ExtractedFields(
     public IReadOnlyList<string> Validate() =>
     [
         .. Skills?.Validate() ?? ["skills: missing."],
-        .. Salary?.Validate() ?? [],
+        .. Salary?.Validate() ?? ["salary: missing."],
         .. Rule(Country is not null && !CountryCodes.IsKnown(Country), $"country: '{Country}' is not an ISO 3166-1 alpha-2 code."),
         .. Rule(City is not null && string.IsNullOrWhiteSpace(City), "city: blank; use null when not stated."),
         .. Rule(SpokenLanguages is null, "spokenLanguages: missing."),

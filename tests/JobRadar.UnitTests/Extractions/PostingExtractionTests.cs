@@ -12,7 +12,7 @@ public class PostingExtractionTests
     private static readonly ExtractedFields Fields = new(
         Seniority: Seniority.Senior,
         Skills: new Skills(["C#"], [".NET"], [], []),
-        Salary: null,
+        Salary: Salary.None,
         RemotePolicy: RemotePolicy.Remote,
         Country: "DE",
         City: null,

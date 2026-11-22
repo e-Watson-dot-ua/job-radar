@@ -7,7 +7,7 @@ public class ExtractedFieldsTests
     private static readonly ExtractedFields NothingStated = new(
         Seniority: null,
         Skills: Skills.None,
-        Salary: null,
+        Salary: Salary.None,
         RemotePolicy: null,
         Country: null,
         City: null,
