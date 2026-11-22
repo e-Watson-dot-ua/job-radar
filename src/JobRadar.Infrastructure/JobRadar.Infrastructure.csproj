@@ -1,6 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" />
+    <!-- Needed only by `dotnet ef` to create migrations; does not flow into the running app. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\JobRadar.Application\JobRadar.Application.csproj" />
   </ItemGroup>
 
